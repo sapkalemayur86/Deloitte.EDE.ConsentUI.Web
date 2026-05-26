@@ -7,5 +7,5 @@
 // The EDE API MUST send CORS headers allowing the site origin, e.g.:
 //   Access-Control-Allow-Origin: https://<group>.gitlab.io
 window.EDE_CONFIG = {
-    apiBase: "https://REPLACE-ME-with-your-ede-api.example.com"
+    apiBase: "https://localhost:7214"
 };
