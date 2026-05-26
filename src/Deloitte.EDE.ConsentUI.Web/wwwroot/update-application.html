@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Permission Request for Application Updation</title>
+    <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+    <main class="page">
+        <!-- Hero / Header banner -->
+        <section class="banner">
+            <div class="banner__icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <div class="banner__text">
+                <h1>Permission Request for Application Updation</h1>
+                <p>Authorization required to update health insurance application on your behalf</p>
+            </div>
+        </section>
+
+        <!-- Consent & Permission Management -->
+        <section class="card">
+            <header class="card__header">
+                <span class="card__icon card__icon--blue" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </span>
+                <h2>Consent &amp; Permission Management</h2>
+            </header>
+            <div class="card__body">
+                <p>
+                    <strong class="link" data-field="requesterName">Loading...</strong>
+                    is requesting permission to manage a health insurance application on your behalf for coverage year
+                    <strong class="link" data-field="coverageYear">Loading...</strong>.
+                    By granting this permission, you authorize the web broker to modify and save changes to your
+                    existing application, including personal, household and income information updates.
+                </p>
+            </div>
+        </section>
+
+        <!-- Two-column row -->
+        <div class="grid">
+            <!-- Application Details -->
+            <section class="card">
+                <header class="card__header">
+                    <span class="card__icon card__icon--blue" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="8" y1="13" x2="16" y2="13"></line>
+                            <line x1="8" y1="17" x2="16" y2="17"></line>
+                        </svg>
+                    </span>
+                    <h2>Application Details</h2>
+                </header>
+                <div class="card__body">
+                    <dl class="details">
+                        <div class="details__item">
+                            <dt>Application Id</dt>
+                            <dd data-app-id>&mdash;</dd>
+                        </div>
+                        <div class="details__item">
+                            <dt>Web Broker</dt>
+                            <dd data-field="webBroker">Loading...</dd>
+                        </div>
+                        <div class="details__item">
+                            <dt>Coverage Year</dt>
+                            <dd data-field="coverageYear">Loading...</dd>
+                        </div>
+                        <div class="details__item">
+                            <dt>Request Date</dt>
+                            <dd data-field="requestDate">Loading...</dd>
+                        </div>
+                    </dl>
+                </div>
+            </section>
+
+            <!-- Authorization Notice -->
+            <section class="card">
+                <header class="card__header">
+                    <span class="card__icon card__icon--blue" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </span>
+                    <h2>Authorization Notice</h2>
+                </header>
+                <div class="card__body">
+                    <div class="notice">
+                        <span class="notice__icon" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </span>
+                        <div class="notice__text">
+                            <h3>Important Authorization</h3>
+                            <p>
+                                By granting permission, you authorize the user to update your health insurance
+                                application. You can revoke this permission by clicking the &ldquo;Deny&rdquo; button below.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button type="button" class="btn btn--primary" id="approveBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                Approve
+            </button>
+            <button type="button" class="btn btn--danger-outline" id="denyBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Deny
+            </button>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/consent.js"></script>
+</body>
+</html>

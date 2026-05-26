@@ -1,0 +1,56 @@
+# Deploys the static Consent UI (contents of wwwroot) to GitHub Pages.
+#
+# Before pushing, edit src/Deloitte.EDE.ConsentUI.Web/wwwroot/js/config.js and
+# set EDE_CONFIG.apiBase to your hosted EDE API URL. The EDE API must allow
+# CORS for this Pages origin (e.g. https://<user>.github.io).
+#
+# After the first successful run:
+#   GitHub repo -> Settings -> Pages -> Source: "GitHub Actions"
+# The site will be available at:
+#   https://<user>.github.io/<repo>/create-application.html?applicationId=...
+#   https://<user>.github.io/<repo>/update-application.html?applicationId=...
+#   https://<user>.github.io/<repo>/submit-enrollment.html?applicationId=...
+
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Stage site
+        run: |
+          mkdir -p _site
+          cp -r src/Deloitte.EDE.ConsentUI.Web/wwwroot/. _site/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
