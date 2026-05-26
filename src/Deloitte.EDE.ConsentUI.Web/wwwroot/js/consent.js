@@ -68,6 +68,67 @@
             .replace(/'/g, "&#39;");
     }
 
+    function getEventId() {
+        var path = (window.location.pathname || "").toLowerCase();
+        if (path.indexOf("create-application") !== -1) return 1;
+        if (path.indexOf("update-application") !== -1) return 2;
+        if (path.indexOf("submit-enrollment") !== -1) return 3;
+        return 0;
+    }
+
+    function getFlowLabel() {
+        var ev = getEventId();
+        if (ev === 1) return "create the application";
+        if (ev === 2) return "update the application";
+        if (ev === 3) return "submit the enrollment";
+        return "process the request";
+    }
+
+    function showSuccess(decision, appId, apiMessage) {
+        var heading = decision === "Approved" ? "Permission Granted" : "Permission Denied";
+        var body = decision === "Approved"
+            ? "You have approved the request to " + escapeHtml(getFlowLabel()) +
+              " for application id <strong>" + escapeHtml(appId) + "</strong>."
+            : "You have denied the request to " + escapeHtml(getFlowLabel()) +
+              " for application id <strong>" + escapeHtml(appId) + "</strong>.";
+        var apiLine = apiMessage
+            ? '<p><em>' + escapeHtml(apiMessage) + '</em></p>'
+            : '';
+        setMainHtml(
+            '<section class="card">' +
+            '  <header class="card__header"><h2>' + heading + '</h2></header>' +
+            '  <div class="card__body">' +
+            '    <div class="notice">' +
+            '      <div class="notice__text">' +
+            '        <h3>Thank you</h3>' +
+            '        <p>' + body + '</p>' +
+            apiLine +
+            '        <p>You may now close this window.</p>' +
+            '      </div>' +
+            '    </div>' +
+            '  </div>' +
+            '</section>'
+        );
+    }
+
+    function showSubmitError(decision, message, appId) {
+        var safeMessage = (message || "Unknown error").toString();
+        setMainHtml(
+            '<section class="card">' +
+            '  <header class="card__header"><h2>Unable to Submit Decision</h2></header>' +
+            '  <div class="card__body">' +
+            '    <div class="notice">' +
+            '      <div class="notice__text">' +
+            '        <h3>Failed to record your ' + escapeHtml(decision) + ' decision</h3>' +
+            '        <p>We could not update the consent for application id <strong>' + escapeHtml(appId) + '</strong>.</p>' +
+            '        <p><em>' + escapeHtml(safeMessage) + '</em></p>' +
+            '      </div>' +
+            '    </div>' +
+            '  </div>' +
+            '</section>'
+        );
+    }
+
     function valueOrNA(v) {
         if (v === null || v === undefined) return NA;
         if (typeof v === "string" && v.trim() === "") return NA;
@@ -106,6 +167,36 @@
         });
     }
 
+    function submitDecision(appId, decision) {
+        var apiBase = getApiBase();
+        if (!apiBase) {
+            return Promise.reject(new Error("API base URL is not configured (window.EDE_CONFIG.apiBase)."));
+        }
+        var nowIso = new Date().toISOString();
+        var payload = {
+            applicationId: String(appId),
+            eventId: getEventId(),
+            isSent: true,
+            consentStatus: decision,
+            mailSentDate: nowIso,
+            consentDate: nowIso
+        };
+        var url = apiBase + "/applications/update-mail-notification-data";
+        return fetch(url, {
+            method: "POST",
+            headers: {
+                "Accept": "*/*",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        }).then(function (resp) {
+            if (!resp.ok) {
+                throw new Error("API returned HTTP " + resp.status + " " + resp.statusText);
+            }
+            return resp.json().catch(function () { return {}; });
+        });
+    }
+
     function applyData(appId, data) {
         // Always shown.
         document.querySelectorAll("[data-app-id]").forEach(function (el) {
@@ -129,15 +220,27 @@
         var approveBtn = document.getElementById("approveBtn");
         var denyBtn = document.getElementById("denyBtn");
 
+        function handle(decision) {
+            return function () {
+                if (approveBtn) approveBtn.disabled = true;
+                if (denyBtn) denyBtn.disabled = true;
+                submitDecision(appId, decision)
+                    .then(function (data) {
+                        showSuccess(decision, appId, data && data.message);
+                    })
+                    .catch(function (err) {
+                        if (approveBtn) approveBtn.disabled = false;
+                        if (denyBtn) denyBtn.disabled = false;
+                        showSubmitError(decision, err && err.message ? err.message : err, appId);
+                    });
+            };
+        }
+
         if (approveBtn) {
-            approveBtn.addEventListener("click", function () {
-                alert("Approved for application id: " + appId);
-            });
+            approveBtn.addEventListener("click", handle("Approved"));
         }
         if (denyBtn) {
-            denyBtn.addEventListener("click", function () {
-                alert("Denied for application id: " + appId);
-            });
+            denyBtn.addEventListener("click", handle("Denied"));
         }
     }
 
