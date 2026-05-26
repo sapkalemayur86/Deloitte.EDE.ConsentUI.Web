@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EDE Consent UI</title>
+    <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+    <main class="page">
+        <section class="banner">
+            <div class="banner__text">
+                <h1>EDE Consent UI</h1>
+                <p>Select a consent flow below. Each page requires an <code>applicationId</code> query parameter.</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <header class="card__header">
+                <h2>Available pages</h2>
+            </header>
+            <div class="card__body">
+                <ul>
+                    <li><a href="create-application.html?applicationId=1000000012">Create Application consent</a></li>
+                    <li><a href="update-application.html?applicationId=1000000012">Update Application consent</a></li>
+                    <li><a href="submit-enrollment.html?applicationId=1000000012">Submit Enrollment consent</a></li>
+                </ul>
+                <p>
+                    Replace <code>1000000012</code> with a real application id. The API base URL is configured in
+                    <code>js/config.js</code>.
+                </p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
